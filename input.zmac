@@ -1,0 +1,10 @@
+op a9 #lda;
+ae, ac;
+ei;
+eo, ai;
+reset;
+op b9 #ldb;
+ae, ac;
+ei;
+eo, bi;
+reset;
