@@ -227,7 +227,7 @@ vector<string> translate(vector<token> code) {
     vector<token> line;
         
     for (int i; i < code.size(); i++) {
-        if (code[i].type == COMMENT) { //ignore comments
+        if ((code[i].type == COMMENT) || (code[i].type == COMMA)) { //ignore comments
         }else if (code[i].type == SEMICOLON) {
             lines.push_back(line);
             line.clear();
@@ -236,11 +236,29 @@ vector<string> translate(vector<token> code) {
         }
     }
 
-    int opNumber;
-    int current = 0;
-    while(bool notDone = true) {
 
-        
+    for (int i; i < lines.size(); i++) {
+
+        Operation anop;
+
+        anop.setCode(hexStringToChar(lines[i][2].value));
+
+        i++;
+
+        while (bool notDone = true) {
+            vector<Micro> aline;
+            if (lines[i][1].type == KEYWORD) {
+                i--;  //decrement so that when the for loop increments, it's still at the op line
+                notDone = false;
+            } else {
+                for (int j; j < lines[i].size(); j++) {
+                    aline.push_back(stomic(lines[i][j].value));
+                }
+                anop.addLine(aline);
+
+                if ((i + 1) < lines.size()) {i++;} else {notDone = false;}
+            }
+        }
         
     }
     
