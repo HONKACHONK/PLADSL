@@ -121,19 +121,103 @@ bool syntaxCheck(vector<token> tokens) {
 }
 
 enum Micro {
-    ae,
-    ac,
+    res,
+    ai,
+    ao,
+    bi,
+    bo,
+    ci,
+    co,
+    di,
+    _do,
+    adi,
+    adc,
     ei,
-    eo
+    eo,
+    ioi,
+    ioo,
+    opi,
+    alu1,
+    alu2,
+    err
 };
 
 class Operation {
 public:
-    
+    void setCode(char opcode) {
+        this->opcode = opcode;
+    }
+
+    char getCode() {
+        return opcode;
+    }
+
+    void addLine(vector<Micro> instructions) {
+        data.push_back(instructions);
+    }
+
+    vector<Micro> getLine() {
+        vector<Micro> last = data.back();
+        data.pop_back();
+        return last;
+    }
 private:
     char opcode;
     vector<vector<Micro>> data;
+    string comment;
 };
+
+Micro stomic(string s) {
+    if (s == "res") {
+        return res;
+    } else if (s == "ai") {
+        return ai;
+    } else if (s == "ao") {
+        return ao;
+    } else if (s == "bi") {
+        return bi;
+    } else if (s == "bo") {
+        return bo;
+    } else if (s == "ci") {
+        return ci;
+    } else if (s == "co") {
+        return co;
+    } else if (s == "di") {
+        return di;
+    } else if (s == "do") {
+        return _do;
+    } else if (s == "adi") {
+        return adi;
+    } else if (s == "adc") {
+        return adc;
+    } else if (s == "ei") {
+        return ei;
+    } else if (s == "eo") {
+        return eo;
+    } else if (s == "ioi") {
+        return ioi;
+    } else if (s == "ioo") {
+        return ioo;
+    } else if (s == "opi") {
+        return opi;
+    } else if (s == "alu1") {
+        return alu1;
+    } else if (s == "alu2") {
+        return alu2;
+    } else {
+        return err;
+    }
+}
+
+char hexStringToChar(const std::string& hexString) {
+    // Convert the hexadecimal string to an integer
+    int hexValue = std::stoi(hexString, nullptr, 16);
+
+    // Cast the integer to a char
+    char charValue = static_cast<char>(hexValue);
+
+    return charValue;
+}
 
 vector<string> translate(vector<token> code) {
     vector<string> pla;
