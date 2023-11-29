@@ -99,7 +99,7 @@ vector<token> tokenize(string code) {
             out.push_back({RESET_MACRO, atoken});
         } else {
             out.push_back({MICROINS, atoken});
-        }
+        }         //one thing to note is that the opcode is defined as a microins. This doesn't matter because the opcode handling doesn't care about type.
     
     }
         
@@ -117,7 +117,7 @@ bool syntaxCheck(vector<token> tokens) {
             
         }
     }
-    return true;
+    return true;     //sytax checking is yet to be implemented, as it's not exactly necessary.
 }
 
 enum Micro {
@@ -156,7 +156,7 @@ public:
         data.push_back(instructions);
     }
 
-    vector<Micro> getLine() {
+    vector<Micro> getLine() { //this method reads the last line of the microinstructions, and deletes it from the vector.
         vector<Micro> last = data.back();
         data.pop_back();
         return last;
@@ -210,10 +210,8 @@ Micro stomic(string s) {
 }
 
 char hexStringToChar(const std::string& hexString) {
-    // Convert the hexadecimal string to an integer
     int hexValue = std::stoi(hexString, nullptr, 16);
 
-    // Cast the integer to a char
     char charValue = static_cast<char>(hexValue);
 
     return charValue;
@@ -226,8 +224,8 @@ vector<string> translate(vector<token> code) {
     
     vector<token> line;
         
-    for (int i; i < code.size(); i++) {
-        if ((code[i].type == COMMENT) || (code[i].type == COMMA)) { //ignore comments
+    for (int i; i < code.size(); i++) { //splits the tokens into lines based on ";"
+        if ((code[i].type == COMMENT) || (code[i].type == COMMA)) { //ignore comments and commas
         }else if (code[i].type == SEMICOLON) {
             lines.push_back(line);
             line.clear();
@@ -241,7 +239,7 @@ vector<string> translate(vector<token> code) {
 
         Operation anop;
 
-        anop.setCode(hexStringToChar(lines[i][2].value));
+        anop.setCode(hexStringToChar(lines[i][2].value)); //sets anop's opcode to the hex value of the opcode token.
 
         i++;
 
