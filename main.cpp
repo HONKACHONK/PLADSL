@@ -276,6 +276,19 @@ vector<string> translate(vector<token> code) {
 
         //need to convert each MiroLine from microlines into a string of pla data and push back the pla. After that, I've finished*!
         //*I still need to implement flags and comments on the pla file.
+
+        for (int i; i < microlines.size(); i++) {
+            string currentline = "xxx000000000000 000000000000000000";
+            string opcode = currentline.substr(3, 8);
+            string clock = currentline.substr(11, 4);
+            string instructions = currentline.substr(16, 18);
+
+            opcode = bitset<8>(microlines[i].opcode).to_string(); //sets opcode to a binary string of the opcode
+            clock = bitset<4>(i).to_string();
+            for (int j; j < microlines[i].instructs.size(); j++) {
+                //turn the proper bit of instructions.
+            }
+        }
         
     }
     
