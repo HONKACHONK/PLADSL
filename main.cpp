@@ -156,10 +156,8 @@ public:
         data.push_back(instructions);
     }
 
-    vector<Micro> getLine() { //this method reads the last line of the microinstructions, and deletes it from the vector.
-        vector<Micro> last = data.back();
-        data.pop_back();
-        return last;
+    vector<vector<Micro>> getData() {
+        return data;
     }
 private:
     char opcode;
@@ -257,6 +255,27 @@ vector<string> translate(vector<token> code) {
                 if ((i + 1) < lines.size()) {i++;} else {notDone = false;}
             }
         }
+
+        struct MicroLine {
+            char cycle;
+            vector<Micro> instructs;
+            char opcode;
+            
+
+        };
+
+        vector<vector<Micro>> opdata = anop.getData();
+        vector<MicroLine> microlines;
+        for (int i; i < opdata.size(); i++) { //fills microlines with micro lines. Each loop is a new line.
+            MicroLine currentline;
+            currentline.opcode = anop.getCode();
+            currentline.instructs = anop.getData()[i];
+            currentline.cycle = i;
+            microlines.push_back(currentline);
+        }
+
+        //need to convert each MiroLine from microlines into a string of pla data and push back the pla. After that, I've finished*!
+        //*I still need to implement flags and comments on the pla file.
         
     }
     
