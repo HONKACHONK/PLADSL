@@ -286,7 +286,7 @@ vector<string> translate(vector<token> code) {
             opcode = bitset<8>(microlines[i].opcode).to_string(); //sets opcode to a binary string of the opcode
             clock = bitset<4>(i).to_string();
             for (int j; j < microlines[i].instructs.size(); j++) {
-                //turn the proper bit of instructions.
+                opcode.replace(microlines[i].instructs[j], 1, "1");
             }
         }
         
