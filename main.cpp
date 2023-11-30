@@ -208,11 +208,10 @@ Micro stomic(string s) {
 }
 
 char hexStringToChar(const std::string& hexString) {
-    int hexValue = std::stoi(hexString, nullptr, 16);
 
-    char charValue = static_cast<char>(hexValue);
+    char hexValue = std::stoi(hexString, nullptr, 16);
 
-    return charValue;
+    return hexValue;
 }
 
 vector<string> translate(vector<token> code) {
@@ -222,7 +221,7 @@ vector<string> translate(vector<token> code) {
     
     vector<token> line;
         
-    for (int i; i < code.size(); i++) { //splits the tokens into lines based on ";"
+    for (int i = 0; i < code.size(); i++) { //splits the tokens into lines based on ";"
         if ((code[i].type == COMMENT) || (code[i].type == COMMA)) { //ignore comments and commas
         }else if (code[i].type == SEMICOLON) {
             lines.push_back(line);
@@ -233,11 +232,11 @@ vector<string> translate(vector<token> code) {
     }
 
 
-    for (int i; i < lines.size(); i++) {
+    for (int i = 0; i < lines.size(); i++) {
 
         Operation anop;
 
-        anop.setCode(hexStringToChar(lines[i][2].value)); //sets anop's opcode to the hex value of the opcode token.
+        anop.setCode(hexStringToChar(lines[i][1].value)); //sets anop's opcode to the hex value of the opcode token.
 
         i++;
 
@@ -266,27 +265,27 @@ vector<string> translate(vector<token> code) {
 
         vector<vector<Micro>> opdata = anop.getData();
         vector<MicroLine> microlines;
-        for (int i; i < opdata.size(); i++) { //fills microlines with micro lines. Each loop is a new line.
+        for (int j = 0; j < opdata.size(); j++) { //fills microlines with micro lines. Each loop is a new line.
             MicroLine currentline;
             currentline.opcode = anop.getCode();
-            currentline.instructs = anop.getData()[i];
-            currentline.cycle = i;
+            currentline.instructs = anop.getData()[j];
+            currentline.cycle = j;
             microlines.push_back(currentline);
         }
 
         //need to convert each MiroLine from microlines into a string of pla data and push back the pla. After that, I've finished*!
         //*I still need to implement flags and comments on the pla file.
 
-        for (int i; i < microlines.size(); i++) {
+        for (int j = 0; j < microlines.size(); j++) {
             string currentline = "xxx000000000000 000000000000000000";
             string opcode = currentline.substr(3, 8);
             string clock = currentline.substr(11, 4);
             string instructions = currentline.substr(16, 18);
 
-            opcode = bitset<8>(microlines[i].opcode).to_string(); //sets opcode to a binary string of the opcode
+            opcode = bitset<8>(microlines[j].opcode).to_string(); //sets opcode to a binary string of the opcode
             clock = bitset<4>(i).to_string();
-            for (int j; j < microlines[i].instructs.size(); j++) {
-                opcode.replace(microlines[i].instructs[j], 1, "1");
+            for (int k = 0; k < microlines[j].instructs.size(); k++) {
+                opcode.replace(microlines[j].instructs[k], 1, "1");
             }
         }
         
