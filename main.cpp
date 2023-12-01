@@ -5,49 +5,48 @@
 #include <iomanip>
 #include <sstream>
 #include <cctype>
-using namespace std;
 
-void writeToFile(vector<string> in) {
-    ofstream outputFile("plafile.txt", ios::trunc);
+void writeToFile(std::vector<std::string> in) {
+    std::ofstream outputFile("plafile.txt", std::ios::trunc);
     if (!outputFile) {
-        cout << "Error: Cannot open file for writing." << endl;
+        std::cout << "Error: Cannot open file for writing." << std::endl;
         return;
     }
 
     for(int i = 0; i < in.size(); i++) {
-        outputFile << in[i] << endl; 
+        outputFile << in[i] << std::endl; 
     }
 
     outputFile.close();
-    cout << "Text written to file successfully." << endl;
+    std::cout << "Text written to file successfully." << std::endl;
 }
 
-string getNextValue() {
+std::string getNextValue() {
     int input;
-    cin >> hex >> input;
-    bitset<8> value(input);
+    std::cin >> std::hex >> input;
+    std::bitset<8> value(input);
     return value.to_string();
 }
 
-string getCode(string file) {
-    ifstream codeIn(file);
-    string codeOut;
+std::string getCode(std::string file) {
+    std::ifstream codeIn(file);
+    std::string codeOut;
 
     if (codeIn.is_open()) {
-        stringstream buffer;
+        std::stringstream buffer;
         buffer << codeIn.rdbuf();
         codeOut = buffer.str();
         
         codeIn.close();
     } else {
-        cout << "Unable to open file" << endl;
+        std::cout << "Unable to open file" << std::endl;
     }
 
     return codeOut;
 }
 
-vector<string> compile(vector<string> code) {
-    vector<string> out;
+std::vector<std::string> compile(std::vector<std::string> code) {
+    std::vector<std::string> out;
     int i = 1;
     
     return out;
@@ -68,14 +67,14 @@ enum tokenType {
 
 struct token {
     tokenType type;
-    string value;
+    std::string value;
 };
 
-vector<token> tokenize(string code) {
-    vector<token> out;
+std::vector<token> tokenize(std::string code) {
+    std::vector<token> out;
     for (int i = 0; i < code.size(); i++) {
         if (isspace(code[i])) {i++;}
-        string atoken;
+        std::string atoken;
         bool notDone = true;
 
         do {
@@ -107,9 +106,9 @@ vector<token> tokenize(string code) {
     return out;
 }
 
-bool syntaxCheck(vector<token> tokens) {
+bool syntaxCheck(std::vector<token> tokens) {
     int cycle = 0;
-    vector<token> line;
+    std::vector<token> line;
     for (int i = 0; i < tokens.size(); i++) {
         if (tokens[i].type == COMMENT) { //ignore comments
             
@@ -152,20 +151,20 @@ public:
         return opcode;
     }
 
-    void addLine(vector<Micro> instructions) {
+    void addLine(std::vector<Micro> instructions) {
         data.push_back(instructions);
     }
 
-    vector<vector<Micro>> getData() {
+    std::vector<std::vector<Micro>> getData() {
         return data;
     }
 private:
     char opcode;
-    vector<vector<Micro>> data;
-    string comment;
+    std::vector<std::vector<Micro>> data;
+    std::string comment;
 };
 
-Micro stomic(string s) {
+Micro stomic(std::string s) {
     if (s == "res") {
         return res;
     } else if (s == "ai") {
@@ -214,12 +213,12 @@ char hexStringToChar(const std::string& hexString) {
     return hexValue;
 }
 
-vector<string> translate(vector<token> code) {
-    vector<string> pla;
-    vector<vector<token>> lines;
+std::vector<std::string> translate(std::vector<token> code) {
+    std::vector<std::string> pla;
+    std::vector<std::vector<token>> lines;
     
     
-    vector<token> line;
+    std::vector<token> line;
         
     for (int i = 0; i < code.size(); i++) { //splits the tokens into lines based on ";"
         if ((code[i].type == COMMENT) || (code[i].type == COMMA)) { //ignore comments and commas
@@ -241,7 +240,7 @@ vector<string> translate(vector<token> code) {
         i++;
 
         while (bool notDone = true) {
-            vector<Micro> aline;
+            std::vector<Micro> aline;
             if (lines[i][1].type == KEYWORD) {
                 i--;  //decrement so that when the for loop increments, it's still at the op line
                 notDone = false;
@@ -257,14 +256,14 @@ vector<string> translate(vector<token> code) {
 
         struct MicroLine {
             char cycle;
-            vector<Micro> instructs;
+            std::vector<Micro> instructs;
             char opcode;
             
 
         };
 
-        vector<vector<Micro>> opdata = anop.getData();
-        vector<MicroLine> microlines;
+        std::vector<std::vector<Micro>> opdata = anop.getData();
+        std::vector<MicroLine> microlines;
         for (int j = 0; j < opdata.size(); j++) { //fills microlines with micro lines. Each loop is a new line.
             MicroLine currentline;
             currentline.opcode = anop.getCode();
@@ -277,13 +276,13 @@ vector<string> translate(vector<token> code) {
         //*I still need to implement flags and comments on the pla file.
 
         for (int j = 0; j < microlines.size(); j++) {
-            string currentline = "xxx000000000000 000000000000000000";
-            string opcode = currentline.substr(3, 8);
-            string clock = currentline.substr(11, 4);
-            string instructions = currentline.substr(16, 18);
+            std::string currentline = "xxx000000000000 000000000000000000";
+            std::string opcode = currentline.substr(3, 8);
+            std::string clock = currentline.substr(11, 4);
+            std::string instructions = currentline.substr(16, 18);
 
-            opcode = bitset<8>(microlines[j].opcode).to_string(); //sets opcode to a binary string of the opcode
-            clock = bitset<4>(i).to_string();
+            opcode = std::bitset<8>(microlines[j].opcode).to_string(); //sets opcode to a binary string of the opcode
+            clock = std::bitset<4>(i).to_string();
             for (int k = 0; k < microlines[j].instructs.size(); k++) {
                 opcode.replace(microlines[j].instructs[k], 1, "1");
             }
@@ -297,21 +296,21 @@ vector<string> translate(vector<token> code) {
 int main() {
 
     
-    string in;
-    vector<string> out;
+    std::string in;
+    std::vector<std::string> out;
 
     in = getCode("input.zmac");
 
-    vector<token> stuff = tokenize(in);
+    std::vector<token> stuff = tokenize(in);
 
     if (syntaxCheck(stuff)) {
-        vector<string> outData = translate(stuff);
+        std::vector<std::string> outData = translate(stuff);
 
         writeToFile(outData);
 
-        cout << "finished!" << endl;
+        std::cout << "finished!" << std::endl;
     } else {
-        cout << "syntax error" << endl;
+        std::cout << "syntax error" << std::endl;
     }
     
     return 0;
